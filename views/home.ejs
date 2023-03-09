@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/css/home.css">
+<section id="home-page">
+
+
+    <% if(locals.user) {%>
+        <div id="pages-link">
+        <div>    
+        <em>List of Students and Create Students :</em>    
+        <a href="#" class="btn btn-info btn-sm">Students List</a>
+        </div>
+        <div>
+        <em>List of Interviews and Create Interviews:</em> 
+        <a href="#" class="btn btn-warning btn-sm">Interviews List</a>
+        </div>
+        </div>
+    <%} else {%>    
+        <div id="pages-link">
+            <a href="#" class="btn btn-info btn-sm">Register</a>
+        </div>
+    <%}%>
+</section>

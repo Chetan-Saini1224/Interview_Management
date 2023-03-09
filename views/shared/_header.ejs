@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="/css/header.css">
+<nav>
+    <section id="navbar">
+    <div id="logo"> 
+        <a href="/"> <img src="/images/logo.png" > </a>
+    </div>
+
+    <div>
+        <% if(locals.user) {%>
+            <a href="#" class="btn btn-outline-warning btn-sm"><%= user.name %></a>
+            <a href="/user/logout" class="btn btn-outline-info btn-sm">Log Out</a>
+        <%} else {%>    
+        <a href="/user/signup" class="btn btn-outline-warning btn-sm">Sign Up</a>
+        <a href="/user/login" class="btn btn-outline-info btn-sm">Log In</a>
+        <%}%>
+    </div>
+    </section>
+</nav>
+
