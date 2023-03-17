@@ -1,21 +1,102 @@
 <link rel="stylesheet" href="/css/home.css">
-<section id="home-page">
+<section id="home-page">    
+  <form action="student/create_student" method="post">
+    <h1>Add Students</h1>
+    <div class="form-floating">
+        <input type="text" class="form-control" name="name" placeholder="Full Name" required>
+        <label>Full Name</label>
+    </div>
+    <div class="form-floating">
+        <input type="text" class="form-control" name="college" placeholder="College" required>
+        <label>College</label>
+    </div>
+    <select class="form-select" name="status" required>
+        <option selected>Status(Not Placed | Placed)</option>
+        <option value="not_placed">Not Placed</option>
+        <option value="placed">Placed</option>
+      </select>
+    <div class="form-floating">
+        <input type="number" class="form-control" name="DSA" placeholder="DSA Score" min="0" max="100" required>
+        <label>DSA Score(%)</label>
+    </div>
+    <div class="form-floating">
+        <input type="number" class="form-control" name="WebD" placeholder="WebD Score" min="0" max="100" required>
+        <label >WebD Score(%)</label>
+    </div>
+    <div class="form-floating">
+        <input type="number" class="form-control" name="React" placeholder="React Score" min="0" max="100" required>
+        <label >React Score(%)</label>
+    </div>
+    <input type="submit" value="Add Student" class="btn btn-success">
+  </form>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">college</th>
+        <th scope="col">status</th>
+        <th scope="col">React</th>
+        <th scope="col">DSA</th>
+        <th scope="col">WebD</th>
+      </tr>
+    </thead>
+
+    
+    <tbody id="tablebody">
+      <%let count = 1%>
+      <% for(let student of students) {%>
+      <tr>
+        <th scope="row"><%= count++ %></th>
+        <td><%= student.name %></td>
+        <td><%= student.college %></td>
+        <td><%= student.status %></td>
+        <td><%= student.courses_score.React %></td>
+        <td><%= student.courses_score.DSA %></td>
+        <td><%= student.courses_score.WebD %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
 
 
-    <% if(locals.user) {%>
-        <div id="pages-link">
-        <div>    
-        <em>List of Students and Create Students :</em>    
-        <a href="#" class="btn btn-info btn-sm">Students List</a>
-        </div>
-        <div>
-        <em>List of Interviews and Create Interviews:</em> 
-        <a href="#" class="btn btn-warning btn-sm">Interviews List</a>
-        </div>
-        </div>
-    <%} else {%>    
-        <div id="pages-link">
-            <a href="#" class="btn btn-info btn-sm">Register</a>
-        </div>
-    <%}%>
 </section>
+
+
+<script>
+
+
+function tableRow(student)
+{
+   return `
+   <tr>
+        <th scope="row"><%= count++ %></th>
+        <td>${student.name}</td>
+        <td>${student.college}</td>
+        <td>${student.status}</td>
+        <td>${student.courses_score.React}</td>
+        <td>${student.courses_score.DSA}</td>
+        <td>${student.courses_score.WebD}</td>
+      </tr>
+    `
+}
+
+    $("form").submit((e) => {
+        e.preventDefault();
+        console.log( $(e.target).serialize());
+        const req = $.ajax({
+            type:'post',
+            url: $(e.target).prop('action'),
+            data: $(e.target).serialize(),
+            success: function(data){   //only ststus code 200 come in it
+                flashMessage(data)
+                $("#tablebody").append(tableRow(data.student));
+                $(".form-control").val("");
+            },
+            error: function(err){
+                flashMessage({error:"Error..."})
+                console.log(err);
+            }
+        })
+    })
+</script>

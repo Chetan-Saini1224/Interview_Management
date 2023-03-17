@@ -5,26 +5,55 @@ nav{
 {
     display: flex;
     justify-content: space-between;
-    height: 10%;
     box-shadow: rgba(129, 128, 128, 0.45) 0px 20px 15px -20px;
     border-radius: 0.5rem;
     padding: 0.7rem;
     #logo 
     {
         height: inherit;
+        width:20%;
         img
         {
-        width:30%;
+        width:5rem;
         height:auto; 
         }
     }
     a{
       font-weight: 600;
       border-width: 2px;
+      font-size: 0.8rem;
     }
     a:hover{
         color: aliceblue;
     }
+    #page-links
+    {
+        display: flex;
+        width:35%;
+        height: 55%;
+        justify-content: space-between;
+    }
+    #account-links
+    {
+        display: flex;
+        width:16%;
+        height: 55%;
+        justify-content: space-between;
+    }
 }
+
+@media screen and (max-width: 1000px) {
+    html{
+       font-size: 10px;
+    }
+    #navbar
+    {
+    #account-links
+    {
+      width: 20%;
+    }
+    }
+}
+
 
    

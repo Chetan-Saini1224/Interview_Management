@@ -1,5 +1,20 @@
 import{Schema,model,Types} from "mongoose";
 
+const courseSchema = Schema({
+    React:{
+        type:String,
+        required:true
+    },
+    DSA:{
+        type:String,
+        required:true
+    },
+    WebD:{
+        type:String,
+        required:true
+    }
+})
+
 const studentSchema = Schema({
     name:{
         type:String,
@@ -13,10 +28,9 @@ const studentSchema = Schema({
         type:String,
         required:true
     },
-    courses:[{
-        type: Types.ObjectId,
-        ref:"Courses_Results"
-    }] 
+    courses_score: courseSchema
+},{
+    timestamps:true
 })
 
 

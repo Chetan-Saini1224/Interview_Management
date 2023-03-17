@@ -4,8 +4,14 @@
     <div id="logo"> 
         <a href="/"> <img src="/images/logo.png" > </a>
     </div>
-
-    <div>
+    <% if(locals.user) {%>
+    <div id="page-links">
+        <a href="/" class="btn btn-warning btn-sm">Students</a>
+        <a href="/interview/create" class="btn btn-info btn-sm">Interviews</a>
+        <a href="/interview/scheduled" class="btn btn-warning btn-sm">Scheduled Interviews</a>
+    </div>
+    <%}%>
+    <div id="account-links">
         <% if(locals.user) {%>
             <a href="#" class="btn btn-outline-warning btn-sm"><%= user.name %></a>
             <a href="/user/logout" class="btn btn-outline-info btn-sm">Log Out</a>
@@ -16,4 +22,3 @@
     </div>
     </section>
 </nav>
-

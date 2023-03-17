@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 const interviewSchema = mongoose.Schema({
     company_name:{
@@ -12,7 +12,15 @@ const interviewSchema = mongoose.Schema({
     role:{
         type:String,
         required:true
-    } 
+    },
+    students:[
+        {
+            type:Types.ObjectId,
+            ref:'Students'
+        }
+    ]
+},{
+    timestamps:true
 })
 
 

@@ -50,8 +50,6 @@ app.set("layout extractScripts", true);
 
 
 
-app.use(cors()); //Enable All CORS Requests
-
 app.use(express.static("./assets"));
 
 app.use('/',router);

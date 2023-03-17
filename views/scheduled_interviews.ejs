@@ -1,0 +1,125 @@
+<link rel="stylesheet" href="/css/home.css">
+<section id="home-page" >    
+  <div style="display: flex; flex-direction: column;">
+  <form style="width: 100%;">
+    <select name="interview" class="form-select" onchange="getInterviews(this)" >
+        <option selected>--Select Interview--</option>
+        <%let idx = 0%>
+        <%for(let interview of interviews) {%>  
+          <option value='<%= interview._id %>'><%= interview.company_name %>  | <%= dates[idx++] %> |</b> <%= interview.role %> </option>
+        <%}%> 
+    </select>
+
+  </form>
+  <form method="get" action="/interview/downloadcsv" style="width: 120%;"> 
+    <input type="submit" class=" btn btn-success btn-sm" value="Download CSV" style="width:30%;" >
+  </form>
+  </div>
+  <table class="table" >
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Student Name</th>
+        <th scope="col">Student college</th>
+        <th scope="col">Company Name</th>
+        <th scope="col">Role</th>
+        <th scope="col">Date</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+
+    <tbody id="tablebody" style="font-size: 12px;">
+      
+    </tbody>
+  </table>
+
+</section>
+
+
+<script>
+
+function tableRow(Data,date)
+{
+   let htmlStr = "";
+   let idx=0;
+   let status = ['cleared','pending','failed']
+   debugger;
+   for(let data of Data)
+   { 
+
+    let sel = $('<select>');
+    sel.css("border-radius",'5px')
+    sel.attr("onchange","changeStatus(this)");
+    sel.append($("<option>").attr("selected",true).text(data.result));  
+    status.forEach((val) => {
+      if(data.result != val)
+        sel.append($("<option>").attr('value',val).text(val));
+    });
+
+      
+   let selHtml = sel.prop('outerHTML');
+   htmlStr += `<tr >
+        <th scope="row">${idx+1}</th>
+        <td>${data.student.name}</td>
+        <td>${data.student.college}</td>
+        <td>${data.interview.company_name}</td>
+        <td>${data.interview.role}</td>
+        <td>${date[idx++]}</td>
+        <td id=${data._id}>
+          ${selHtml}
+        </td>
+    </tr>`
+    }
+    $("#tablebody").append(htmlStr);
+}
+
+
+
+    function getInterviews()
+    {
+        let interviewId = $("select[name='interview']").val();
+        if(interviewId != "--Select Interview--") 
+        {
+        $.ajax({
+            type:'post',
+            url: "/interview/getschedled",
+            data: {
+              interview: interviewId
+            },
+            success:function(data){
+                debugger;
+                tableRow(data.interviews,data.dates)
+            },
+            error:function(){
+              flashMessage({error:"Error..."})
+            }    
+        }); 
+        }
+  }
+  function changeStatus(t)
+  {
+    let status = $(t).val();
+    let id = $(t).parent().attr("id");
+    
+    alert(status);
+     $.ajax({
+      type:'post',
+      url:"/interview/changestatus",
+      data:{
+        id,
+        status
+      },
+      success: function(data){
+        console.log(data)
+          flashMessage(data); 
+      },
+      error(){
+        flashMessage({error:"Error...."})
+      }
+
+     })
+  }
+</script>
+
+
+

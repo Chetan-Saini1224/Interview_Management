@@ -1,0 +1,125 @@
+<link rel="stylesheet" href="/css/home.css">
+<section id="home-page">    
+  <form action="/interview/create" method="post">
+    <h1>Add Interviews</h1>
+    <div class="form-floating">
+        <input type="text" class="form-control" name="company_name" placeholder="Company Name" required>
+        <label>Company Name</label>
+    </div>
+    <div class="form-floating">
+        <input type="date" class="form-control" name="date" placeholder="Date" required>
+        <label>Date</label>
+    </div>
+    <div class="form-floating">
+        <input type="text" class="form-control" name="role" placeholder="Role" required>
+        <label>Role</label>
+    </div>
+    
+    <input type="submit" value="Add Interview" class="btn btn-success">
+  </form>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">company Name</th>
+        <th scope="col">interview Date</th>
+        <th scope="col">role</th>
+        <th scope="col">students</th>
+      </tr>
+    </thead>
+
+    
+    <tbody id="tablebody">
+        <%let count=0 %>
+        <% for(let interview of interviews) {%>
+          <tr interview_id="<%= interview._id %>">
+            <th scope="row"><%= ++count %></th>
+            <td><%= interview.company_name %></td>
+            <td><%= dates[count-1] %></td>
+            <td><%= interview.role %></td>
+            <td> 
+            <select name="student" class="form-select" onchange="allocateInterview(this)">
+              <option selected>--Allocate Students--</option>
+              <%for(let st of students) {%>
+                <% if(!interview.students.includes(st._id)) {%>   
+                <option value='<%= st._id %>'><%= st.name %></option>
+                <%}%>
+              <%}%> 
+            </select>
+          </td>
+          </tr> 
+        <%}%>
+    </tbody>
+  </table>
+
+
+</section>
+
+
+<script>
+
+function allocateInterview(e)
+{
+  let val = $(e).val();
+  if(val != "--Allocate Students--")
+  {
+    let interview_id = $(e).parent().parent().attr("interview_id");
+    $.ajax({
+            type:'post',
+            url: "/interview/allocate",
+            data: {
+              student:val,
+              interview: interview_id
+            },
+            success:function(data){
+              flashMessage(data)
+              $(e).children(`option[value=${val}]`).remove();
+            },
+            error:function(){
+              flashMessage({error:"Error..."})
+            }    
+        }); 
+  }
+}
+function tableRow(interview,date,students)
+{
+var sel = $('<select>');
+sel.addClass("form-select")
+sel.attr("onchange","allocateInterview(this)");
+sel.append($("<option>").text("--Allocate Students--"));  
+$(students).each(function() {
+ sel.append($("<option>").attr('value',this._id).text(this.name));
+});
+
+var selHtml = sel.prop('outerHTML');
+   return `
+   <tr interview_id="${interview._id}">
+        <th scope="row"><%= ++count %></th>
+        <td>${interview.company_name}</td>
+        <td>${date}</td>
+        <td>${interview.role}</td>
+        <td>${selHtml}</td>
+  </tr>
+`
+}
+
+    $("form[action='/interview/create']").submit((e) => {
+        e.preventDefault();
+        const req = $.ajax({
+            type:'post',
+            url: $(e.target).prop('action'),
+            data: $(e.target).serialize(),
+            success: function(data)
+            {  
+                flashMessage(data)
+                debugger;
+                $("#tablebody").append(tableRow(data.interview,data.date,data.students));
+                $(".form-control").val("");
+            },
+            error: function(err){
+                flashMessage({error:"Error..."})
+                console.log(err);
+            }
+        })
+    })
+</script>

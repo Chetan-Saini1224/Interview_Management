@@ -58,7 +58,4 @@ passport.setAuthenticatedUser = function(req,res,next)
 }
 
 
-
-
-
 export default passport;

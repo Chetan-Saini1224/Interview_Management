@@ -3,16 +3,20 @@ import mongoose from "mongoose";
 const scheduledInterviewSchema = mongoose.Schema({
     student:{
         type:mongoose.Types.ObjectId,
-        ref:'Students'
+        ref:'Students',
+        required:true
     },
     interview:{
         type:mongoose.Types.ObjectId,
-        ref:'Interviews'
+        ref:'Interviews',
+        required:true
     },
     result:{
         type:String,
         required:true
     } 
+},{
+    timestamps:true
 })
 
 
